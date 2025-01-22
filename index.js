@@ -30,6 +30,11 @@ const initializeDbAndServer = async () => {
 
 initializeDbAndServer();
 
+
+app.get("/",(req,res)=>{
+  res.json("This is an testing API fot Taskmanager backend.")
+})
+
 //Signup API
 app.post("/signup",async(req,res)=>{
 
