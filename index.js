@@ -37,51 +37,57 @@ app.get("/",(req,res)=>{
 
 //Signup API
 app.post("/signup",async(req,res)=>{
-
+  try{
   const {username,password}=req.body;
+
   const q=`select * from customer where username="${username}"`;
-  
   db.query(q,(err,data)=>{
     if(err){
-      res.json(err);
+      res.json(err)
     }else{
-      
       if(data[0]===undefined){
-        const q1=`insert into customer (username,password) values ("${username}","${password}")`;
-        db.query(q1,(err,data)=>{
+        const q2=`insert into customer (username,password) values ("${username}","${password}")`;
+        db.query(q2,(err,data)=>{
           if(err){
-            res.json(err)
+            res.json(err);
           }else{
-            res.json("User has successfully registered");
+            res.json({success_msg:`Successfully registered, your ID is ${data.insertId}`});
           }
         })
       }else{
-        res.json("Username already exsists")
+        res.json({err_msg:"Username already exists"});
       }
     }
   })
+  }catch(e){
+    res.json(e);
+  }
 })
 
 //Login API
 app.post("/login",async (req,res)=>{
   try{
     const {username,password}=req.body;
-  const q=`select * from customer where username="${username}"`;
-  db.query(q,(err,data)=>{
-    if(data[0]===undefined){
-      res.json({err_msg:"Invalid username"});
-    }else{
-      if(password===data[0].password){
-        const jwt_token=jwt.sign({username,password},"Secrete_Key");
-        res.json({jwt_token});
+    const q=`select * from customer where username="${username}"`;
+    db.query(q,(err,data)=>{
+      if(err){
+        res.json(err)
       }else{
-        res.json({err_msg:"Incorrect password"});
+        if(data[0]===undefined){
+          res.json({err_msg:"Invalid username"});
+        }else{
+          if(data[0].password===password){
+         const jwt_token=jwt.sign({username,password},"SCRETE_KEY");
+         res.json({jwt_token});
+          }else{
+            res.json({err_msg:"Invalid password"}); 
+          }
+        }
       }
+    })
+    }catch(e){
+      res.json(e);
     }
-  })
-  }catch(e){
-    res.json(e.message);
-  }
 })
 
 //Adding new task API
