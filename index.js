@@ -7,7 +7,13 @@ const bodyParser=require("body-parser");
 const app = express();
 
 app.use(bodyParser.json());
-app.use(cors());
+app.use(cors(
+  {
+    origin:["https://task-frontend-rouge-eta.vercel.app"],
+    methods:["GET","POST","PUT","DELETE"],
+    credentials:false
+  }
+));
 
 let db ;
 
