@@ -11,7 +11,7 @@ app.use(cors(
   {
     origin:["https://task-frontend-rouge-eta.vercel.app"],
     methods:["GET","POST","PUT","DELETE"],
-    credentials:false
+    credentials:true
   }
 ));
 
